@@ -1,0 +1,51 @@
+version: 2.1
+executors:
+  node:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:10.13-browsers
+jobs:
+  build:
+    executor:
+      name: node
+    steps:
+      - checkout
+      - restore_cache:
+          key: node-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run:
+          name: yarn add ci
+          command: yarn add ci
+      - save_cache:
+          key: node-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+      - run:
+          name: build flat
+          command: yarn build
+# ここから追記
+  deploy-vercel:
+    executor:
+      name: node
+    steps:
+      - checkout
+      - run:
+          name: install vercel on global
+          command: "sudo yarn global add vercel"
+      - attach_workspace:
+          at: .
+      - run:
+          name: deploy to vercel
+          command: vercel --token $NOW_TOKEN --confirm
+# ここまで追記
+workflows:
+  version: 2
+  build-and-cache:
+    jobs:
+      - build
+      - deploy-vercel:
+          requires:
+            - build
