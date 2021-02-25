@@ -46,7 +46,7 @@
     "@types/styled-components": "^5.1.1",
     "@types/styled-system": "^5.1.9",
     "@typescript-eslint/eslint-plugin": "^3.6.0",
-    "@typescript-eslint/parser": "^3.6.0",
+    "@typescript-eslint/parser": "^4.15.2",
     "babel-plugin-styled-components": "^1.10.7",
     "eslint": "^7.4.0",
     "eslint-config-prettier": "^6.11.0",
